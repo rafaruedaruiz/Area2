@@ -1,4 +1,4 @@
-let typingData = {
+let typingData = { // Estructura de datos de tecleo
   user_id: "a1b2c3d4e5f6g7h8i9j0",
   appContext: document.location.href,
   setting: 1,
@@ -29,7 +29,7 @@ let keyPressStartTimes = {};
 let typingSessionActive = false;
 let lastElement = null;
 
-function resetTypingData() {
+function resetTypingData() { // Reinicia los datos de tecleo
   typingData = {
     user_id: "a1b2c3d4e5f6g7h8i9j0",
     appContext: document.location.href,
@@ -61,7 +61,7 @@ function resetTypingData() {
   console.log("Typing data reset");
 }
 
-function debounce(func, wait) {
+function debounce(func, wait) { // Función para evitar que se envíen datos de tecleo con mucha frecuencia
   let timeout;
   return function () {
     const context = this, args = arguments;
@@ -70,7 +70,7 @@ function debounce(func, wait) {
   };
 }
 
-function trimArraysToMatchLength() {
+function trimArraysToMatchLength() { // Ajusta los arrays de tiempos de presión y liberación de teclas para que tengan la misma longitud
   const pressLength = typingData.pressTimes.length;
   const releaseLength = typingData.releaseTimes.length;
 
@@ -81,7 +81,7 @@ function trimArraysToMatchLength() {
   }
 }
 
-const sendTypingData = debounce(() => {
+const sendTypingData = debounce(() => { // Envío de datos de tecleo al background.js
   if (!typingSessionActive) return;
 
   // Trim arrays to ensure matching lengths
@@ -104,7 +104,7 @@ const sendTypingData = debounce(() => {
           return;
         }
         console.log('Typing data sent successfully');
-        resetTypingData();
+        resetTypingData(); // cuando se envían los datos, se reinician
       });
     } catch (error) {
       console.error('Error during sendTypingData:', error);
@@ -114,7 +114,7 @@ const sendTypingData = debounce(() => {
   trySendMessage();
 }, 5000);
 
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', (e) => { // Evento de presión de tecla
   if (!typingSessionActive) {
     typingSessionActive = true;
     typingData.startUnixTime = Date.now();
@@ -128,7 +128,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-document.addEventListener('keyup', (e) => {
+document.addEventListener('keyup', (e) => { // Evento de liberación de tecla
   if (keyPressStartTimes[e.key]) {
     typingData.releaseTimes.push(Date.now());
     delete keyPressStartTimes[e.key];
@@ -140,19 +140,19 @@ document.addEventListener('keyup', (e) => {
   }
 });
 
-document.addEventListener('focusout', (e) => {
+document.addEventListener('focusout', (e) => { // Evento de desenfoque
   if (e.target.classList.contains('message_input')) {
     console.log('Focus out detected on message input');
     sendTypingData();
   }
 });
 
-window.addEventListener('sendMessage', () => {
+window.addEventListener('sendMessage', () => { // Evento de envío de mensaje
   console.log('sendMessage event detected');
   sendTypingData();
 });
 
-document.addEventListener('focusout', (e) => {
+document.addEventListener('focusout', (e) => { 
   if (!e.relatedTarget || !e.relatedTarget.closest('.message_input')) {
     console.log('Focus out detected');
     sendTypingData();

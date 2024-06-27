@@ -2,10 +2,52 @@
 <html>
 <head>
   <title>Typing Data Logger</title>
+  <link rel="stylesheet" type="text/css" href="popup.css">
   <script src="popup.js"></script>
 </head>
 <body>
   <h1>Typing Data Logger</h1>
-  <pre id="logDisplay">Loading...</pre>
+  <div id="logContent" class="hidden">
+    <div class="container">
+      <div class="title">User ID:</div>
+      <div class="value" id="userId">Loading...</div>
+    </div>
+    <div class="container">
+      <div class="title">App Context:</div>
+      <div class="value" id="appContext">Loading...</div>
+    </div>
+    <div class="container">
+      <div class="title">Typed Text:</div>
+      <div class="value" id="typedText">Loading...</div>
+    </div>
+    <div class="container">
+      <div class="title">Time spent in writing (seconds):</div>
+      <div class="value" id="timeToWrite">Loading...</div>
+    </div>
+    <div class="container">
+      <div class="title">Top 3 most pressed keys:</div>
+      <div class="value" id="topKeys">Loading...</div>
+    </div>
+    <button id="toggleDetailsButton">Show More Details</button>
+    <div id="details" class="hidden">
+      <div class="container">
+        <div class="title">Timezone:</div>
+        <div class="value" id="timeZone">Loading...</div>
+      </div>
+      <div class="container">
+        <div class="title">Start Time:</div>
+        <div class="value" id="startUnixTime">Loading...</div>
+      </div>
+      <div class="container">
+        <div class="title">Press Times:</div>
+        <div class="value" id="pressTimes">Loading...</div>
+      </div>
+      <div class="container">
+        <div class="title">Release Times:</div>
+        <div class="value" id="releaseTimes">Loading...</div>
+      </div>
+    </div>
+  </div>
+  <div id="noLogs" class="hidden">No logs available.</div>
 </body>
 </html>
