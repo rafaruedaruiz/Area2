@@ -22,7 +22,8 @@ let typingData = { // Estructura de datos de tecleo
   predictionLengths: [],
   predictionTimes: [],
   predictionWords: [],
-  textStructure: []
+  textStructure: [],
+  mouseMovements: [] // Registro de movimientos del ratón
 };
 
 let keyPressStartTimes = {};
@@ -54,7 +55,8 @@ function resetTypingData() { // Reinicia los datos de tecleo
     predictionLengths: [],
     predictionTimes: [],
     predictionWords: [],
-    textStructure: []
+    textStructure: [],
+    mouseMovements: [] // Reiniciar registro de movimientos del ratón
   };
   typingSessionActive = false;
   lastElement = null;
@@ -157,4 +159,15 @@ document.addEventListener('focusout', (e) => {
     console.log('Focus out detected');
     sendTypingData();
   }
+});
+
+// Capturar movimientos del ratón
+document.addEventListener('mousemove', (e) => {
+  const mouseMovement = {
+    x: e.clientX,
+    y: e.clientY,
+    time: Date.now()
+  };
+  typingData.mouseMovements.push(mouseMovement);
+  console.log(`Mouse moved to (${mouseMovement.x}, ${mouseMovement.y}) at ${mouseMovement.time}`);
 });

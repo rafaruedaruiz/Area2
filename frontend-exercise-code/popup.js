@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const startUnixTimeElement = document.getElementById('startUnixTime');
   const pressTimesElement = document.getElementById('pressTimes');
   const releaseTimesElement = document.getElementById('releaseTimes');
+  const mouseMovementsElement = document.getElementById('mouseMovements');
   const toggleDetailsButton = document.getElementById('toggleDetailsButton');
   const detailsElement = document.getElementById('details');
 
@@ -50,6 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
     return `GMT${timeZone >= 0 ? '+' : ''}${timeZone}`;
   }
 
+  // Convertir y mostrar los movimientos del ratón
+  function displayMouseMovements(movements) {
+    return movements.map(movement => `(${movement.x}, ${movement.y}) at ${formatTime(movement.time)}`).join(', ');
+  }
+
   // Fetch and display log data
   chrome.runtime.sendMessage({ type: 'get_last_log' }, (response) => {
     if (response && response.data && response.data.text.length > 0) {
@@ -63,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
       startUnixTimeElement.textContent = formatTime(data.startUnixTime);
       pressTimesElement.textContent = displayTimes(data.pressTimes);
       releaseTimesElement.textContent = displayTimes(data.releaseTimes);
+      mouseMovementsElement.textContent = displayMouseMovements(data.mouseMovements);
       logContentElement.classList.remove('hidden');
     } else {
       noLogsElement.classList.remove('hidden');
