@@ -1,0 +1,19 @@
+# Dependencias
+node_modules/
+
+# Carpetas de distribución
+dist/
+
+# Archivos de configuración de entorno
+.env
+
+# Archivos de lock
+package-lock.json
+
+# Carpetas y archivos de configuración de editor
+.idea/
+.vscode/
+*.sublime-workspace
+
+# Otros archivos que pueden contener información sensible o que simplemente no son necesarios
+*.log

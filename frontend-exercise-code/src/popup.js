@@ -1,3 +1,7 @@
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const logContentElement = document.getElementById('logContent');
   const noLogsElement = document.getElementById('noLogs');
@@ -15,7 +19,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const detailsElement = document.getElementById('details');
   const loginButton = document.getElementById('loginButton');
   const emailElement = document.getElementById('email');
-  const passwordEelement = document.getElementById('password');
+  const passwordElement = document.getElementById('password');
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyASTSU5s2S7wXi-AZH4YOrq1VtAsndsP18",
+    authDomain: "area2-435a1.firebaseapp.com",
+    projectId: "area2-435a1",
+    storageBucket: "area2-435a1.appspot.com",
+    messagingSenderId: "1026370088893",
+    appId: "1:1026370088893:web:7add6ab8b2fce27eaa2cd4",
+    measurementId: "G-FTWN5K807S"
+  };
+  
+   // Initialize Firebase
+   const app = initializeApp(firebaseConfig);
+   const auth = getAuth(app);
 
   // Función para formatear tiempos Unix a solo la hora
   function formatTime(unixTime) {
@@ -91,10 +109,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   loginButton.addEventListener('click', () => {
-    console.log("Login button clicked");
     const email = emailElement.value;
-    const password = passwordEelement.value;
+    const password = passwordElement.value;  // Asegúrate que la variable está correctamente escrita
     console.log("Email: ", email, "Password: ", password);
+  
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Usuario ha iniciado sesión correctamente
+        const user = userCredential.user;
+        console.log("User logged in: ", user);
+        // Redirigir al usuario o actualizar la UI aquí
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("Login error: ", errorCode, errorMessage);
+        // Manejar otros errores específicos aquí
+      });
   });
 
 });

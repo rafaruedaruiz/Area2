@@ -1,10 +1,10 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "Typing Data Logger",
   "version": "1.0",
   "permissions": ["storage", "activeTab", "scripting", "tabs", "declarativeContent"],
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"]
   },
   "content_scripts": [
     {
@@ -12,12 +12,9 @@
       "js": ["content.js"]
     }
   ],
-  "action": {
+  "browser_action": {
     "default_popup": "popup.html",
-    "default_icon": "icon.png",
-    "default_popup_width": 400
+    "default_icon": "icon.png"
   },
-  "host_permissions": [
-    "<all_urls>"
-  ]
+  "content_security_policy": "script-src 'self' https://www.gstatic.com; object-src 'self'"
 }

@@ -3,15 +3,19 @@
 <head>
   <title>Typing Data Logger</title>
   <link rel="stylesheet" type="text/css" href="popup.css">
-  <script src="popup.js"></script>
+  <script src="dist/bundle.js"></script>
 </head>
 <body>
   <h1>Typing Data Logger</h1>
   <div id="loginForm">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
+    <div class="container">
+      <div class="title">Email: </div>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div class="container">
+      <div class="title">Password: </div>
+      <input type="password" id="password" name="password" required>
+    </div>
     <button id="loginButton">Login</button>
   </div>
   <div id="logContent" class="hidden">
