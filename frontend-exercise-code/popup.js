@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const mouseMovementsElement = document.getElementById('mouseMovements');
   const toggleDetailsButton = document.getElementById('toggleDetailsButton');
   const detailsElement = document.getElementById('details');
+  const loginButton = document.getElementById('loginButton');
+  const emailElement = document.getElementById('email');
+  const passwordEelement = document.getElementById('password');
 
   // Función para formatear tiempos Unix a solo la hora
   function formatTime(unixTime) {
@@ -85,4 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
       toggleDetailsButton.textContent = 'Show More Details';
     }
   });
+
+
+  loginButton.addEventListener('click', () => {
+    console.log("Login button clicked");
+    const email = emailElement.value;
+    const password = passwordEelement.value;
+    console.log("Email: ", email, "Password: ", password);
+  });
+
 });
