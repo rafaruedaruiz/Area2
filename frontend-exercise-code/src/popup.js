@@ -36,6 +36,29 @@ document.addEventListener('DOMContentLoaded', () => {
    const app = initializeApp(firebaseConfig);
    const auth = getAuth(app);
 
+   let userLoged = false;
+   let userLogedId = "";
+
+   // Dependiendo si hay usuario logueado en localstorage o no, muestra sus funcionalidades correspondientes
+   chrome.storage.local.get(['isLoggedIn', 'userEmail', 'userId'], function(data) {
+    if (data.isLoggedIn) {
+      userLoged = true;
+      userLogedId = data.userId;
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('logoutForm').style.display = 'block';
+      logContentElement.classList.remove('hidden')
+      document.getElementById('userEmailLogout').style.display = 'block';
+      document.getElementById('userEmailLogout').textContent = data.userEmail; 
+    }else{
+      userLoged = false;
+      userLogedId = "";
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('logoutForm').style.display = 'none';
+      logContentElement.classList.add('hidden');
+      document.getElementById('userEmailLogout').style.display = 'none';
+    }
+  });
+
   // Función para formatear tiempos Unix a solo la hora
   function formatTime(unixTime) {
     const date = new Date(unixTime);
@@ -80,9 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Fetch and display log data
   chrome.runtime.sendMessage({ type: 'get_last_log' }, (response) => {
-    if (response && response.data && response.data.text.length > 0) {
+    if (response && response.data && response.data.text.length > 0 && userLoged) {
       const data = response.data;
-      userIdElement.textContent = data.user_id;
+      userIdElement.textContent = userLogedId;
       appContextElement.textContent = data.appContext;
       typedTextElement.textContent = data.text.join('');
       timeToWriteElement.textContent = calculateTimeToWrite(data.pressTimes, data.releaseTimes);
@@ -94,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mouseMovementsElement.textContent = displayMouseMovements(data.mouseMovements);
       logContentElement.classList.remove('hidden');
     } else {
-      noLogsElement.classList.remove('hidden');
+      noLogsElement.classList.add('hidden');
     }
   });
 
@@ -118,6 +141,11 @@ document.addEventListener('DOMContentLoaded', () => {
       .then((userCredential) => {
         // Usuario que ha iniciado sesión
         console.log("User logged in: ", userCredential.user);
+
+        // Guardarlo en local storage
+        chrome.storage.local.set({userId: userCredential.user.uid, userEmail: userCredential.user.email, isLoggedIn: true}, () => {
+          console.log("User ID and login state saved to local storage.");
+        });
   
         // Ocultar el formulario de login
         document.getElementById('loginForm').style.display = 'none';
@@ -156,6 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
   logoutButton.addEventListener('click', () => {
     signOut(auth).then(() => {
       console.log("User logged out");
+
+      // Borrarlo de local storage
+      chrome.storage.local.remove(['userId', 'userEmail', 'isLoggedIn'], () => {
+        console.log("User ID and login state cleared from local storage.");
+      });
 
       document.getElementById('logoutForm').style.display = 'none';
       document.getElementById('loginForm').style.display = 'block';
