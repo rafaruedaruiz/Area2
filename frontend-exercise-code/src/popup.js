@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginButton = document.getElementById('loginButton');
   const emailElement = document.getElementById('email');
   const passwordElement = document.getElementById('password');
+  const logoutButton = document.getElementById('logoutButton')
 
   const firebaseConfig = {
     apiKey: "AIzaSyASTSU5s2S7wXi-AZH4YOrq1VtAsndsP18",
@@ -110,23 +111,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loginButton.addEventListener('click', () => {
     const email = emailElement.value;
-    const password = passwordElement.value;  // Asegúrate que la variable está correctamente escrita
+    const password = passwordElement.value;
     console.log("Email: ", email, "Password: ", password);
   
-    const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Usuario ha iniciado sesión correctamente
-        const user = userCredential.user;
-        console.log("User logged in: ", user);
-        // Redirigir al usuario o actualizar la UI aquí
+        // Usuario que ha iniciado sesión
+        console.log("User logged in: ", userCredential.user);
+  
+        // Ocultar el formulario de login
+        document.getElementById('loginForm').style.display = 'none';
+
+        logContentElement.classList.remove('hidden');
+        document.getElementById('userEmailLogout').textContent = userCredential.user.email;  // Mostrar el email del usuario
+        document.getElementById('logoutForm').style.display = 'block';  
+        document.getElementById('loginError').style.display = 'none';  
       })
-      .catch((error) => {
+      .catch((error) => {    // Mostrar mensaje de error
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log("Login error: ", errorCode, errorMessage);
-        // Manejar otros errores específicos aquí
+
+        let userMessage = '';
+        switch (errorCode) {
+          case 'auth/wrong-password':
+            userMessage = 'La contrasena es incorrecta.';
+            break;
+          case 'auth/user-not-found':
+            userMessage = 'No hay registro de usuario correspondiente a este identificador. El usuario puede haber sido eliminado.';
+            break;
+          case 'auth/weak-password':
+            userMessage = 'La contraseña es demasiado debil.';
+            break;
+          default:
+            userMessage = 'Ocurrio un error al intentar iniciar sesion: ' + errorMessage;
+        }
+  
+        const loginErrorDiv = document.getElementById('loginError');
+        loginErrorDiv.textContent = userMessage;
+        loginErrorDiv.style.display = 'block'; 
       });
+  });  
+
+  logoutButton.addEventListener('click', () => {
+    signOut(auth).then(() => {
+      console.log("User logged out");
+
+      document.getElementById('logoutForm').style.display = 'none';
+      document.getElementById('loginForm').style.display = 'block';
+      logContentElement.classList.add('hidden');
+    }).catch((error) => {
+      console.error("Logout error: ", error);
+    });
   });
 
 });
